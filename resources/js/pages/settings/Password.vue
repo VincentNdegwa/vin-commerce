@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
-
-import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
+import { Head, useForm } from '@inertiajs/vue3';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -9,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import { edit } from '@/routes/user-password';
+import { edit, update } from '@/routes/user-password';
 import { type BreadcrumbItem } from '@/types';
 
 const breadcrumbItems: BreadcrumbItem[] = [
@@ -18,6 +16,24 @@ const breadcrumbItems: BreadcrumbItem[] = [
         href: edit().url,
     },
 ];
+
+const form = useForm({
+    current_password: '',
+    password: '',
+    password_confirmation: '',
+});
+
+const submit = () => {
+    form.put(update().url, {
+        preserveScroll: true,
+        onSuccess: () => {
+            form.reset('password', 'password_confirmation', 'current_password');
+        },
+        onError: () => {
+            form.reset('password', 'password_confirmation', 'current_password');
+        },
+    });
+};
 </script>
 
 <template>
@@ -33,20 +49,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                     description="Ensure your account is using a long, random password to stay secure"
                 />
 
-                <Form
-                    v-bind="PasswordController.update.form()"
-                    :options="{
-                        preserveScroll: true,
-                    }"
-                    reset-on-success
-                    :reset-on-error="[
-                        'password',
-                        'password_confirmation',
-                        'current_password',
-                    ]"
-                    class="space-y-6"
-                    v-slot="{ errors, processing, recentlySuccessful }"
-                >
+                <form @submit.prevent="submit" class="space-y-6">
                     <div class="grid gap-2">
                         <Label for="current_password">Current password</Label>
                         <Input
@@ -56,8 +59,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
                             class="mt-1 block w-full"
                             autocomplete="current-password"
                             placeholder="Current password"
+                            v-model="form.current_password"
                         />
-                        <InputError :message="errors.current_password" />
+                        <InputError :message="form.errors.current_password" />
                     </div>
 
                     <div class="grid gap-2">
@@ -69,8 +73,9 @@ const breadcrumbItems: BreadcrumbItem[] = [
                             class="mt-1 block w-full"
                             autocomplete="new-password"
                             placeholder="New password"
+                            v-model="form.password"
                         />
-                        <InputError :message="errors.password" />
+                        <InputError :message="form.errors.password" />
                     </div>
 
                     <div class="grid gap-2">
@@ -84,13 +89,14 @@ const breadcrumbItems: BreadcrumbItem[] = [
                             class="mt-1 block w-full"
                             autocomplete="new-password"
                             placeholder="Confirm password"
+                            v-model="form.password_confirmation"
                         />
-                        <InputError :message="errors.password_confirmation" />
+                        <InputError :message="form.errors.password_confirmation" />
                     </div>
 
                     <div class="flex items-center gap-4">
                         <Button
-                            :disabled="processing"
+                            :disabled="form.processing"
                             data-test="update-password-button"
                             >Save password</Button
                         >
@@ -102,14 +108,14 @@ const breadcrumbItems: BreadcrumbItem[] = [
                             leave-to-class="opacity-0"
                         >
                             <p
-                                v-show="recentlySuccessful"
+                                v-show="form.recentlySuccessful"
                                 class="text-sm text-neutral-600"
                             >
                                 Saved.
                             </p>
                         </Transition>
                     </div>
-                </Form>
+                </form>
             </div>
         </SettingsLayout>
     </AppLayout>

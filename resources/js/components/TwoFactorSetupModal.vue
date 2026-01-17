@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { useClipboard } from '@vueuse/core';
 import { Check, Copy, ScanLine } from 'lucide-vue-next';
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
@@ -42,6 +42,8 @@ const showVerificationStep = ref(false);
 const code = ref<string>('');
 
 const pinInputContainerRef = useTemplateRef('pinInputContainerRef');
+
+const confirmForm = useForm({});
 
 const modalConfig = computed<{
     title: string;
@@ -240,12 +242,21 @@ watch(
                 </template>
 
                 <template v-else>
-                    <Form
-                        v-bind="confirm.form()"
-                        reset-on-error
-                        @finish="code = ''"
-                        @success="isOpen = false"
-                        v-slot="{ errors, processing }"
+                    <form
+                        @submit.prevent="
+                            confirmForm.post(confirm.url(), {
+                                onError: () => {
+                                    // reset-on-error equivalent
+                                    code = '';
+                                },
+                                onFinish: () => {
+                                    code = '';
+                                },
+                                onSuccess: () => {
+                                    isOpen = false;
+                                },
+                            })
+                        "
                     >
                         <input type="hidden" name="code" :value="code" />
                         <div
@@ -259,7 +270,7 @@ watch(
                                     id="otp"
                                     v-model="code"
                                     :maxlength="6"
-                                    :disabled="processing"
+                                    :disabled="confirmForm.processing"
                                 >
                                     <InputOTPGroup>
                                         <InputOTPSlot
@@ -283,20 +294,22 @@ watch(
                                     variant="outline"
                                     class="w-auto flex-1"
                                     @click="showVerificationStep = false"
-                                    :disabled="processing"
+                                    :disabled="confirmForm.processing"
                                 >
                                     Back
                                 </Button>
                                 <Button
                                     type="submit"
                                     class="w-auto flex-1"
-                                    :disabled="processing || code.length < 6"
+                                    :disabled="
+                                        confirmForm.processing || code.length < 6
+                                    "
                                 >
                                     Confirm
                                 </Button>
                             </div>
                         </div>
-                    </Form>
+                    </form>
                 </template>
             </div>
         </DialogContent>

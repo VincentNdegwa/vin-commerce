@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,13 +36,53 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+
+        $notifications = null;
+        $cartItemCount = null;
+
+        if ($user !== null) {
+            $unread = $user->unreadNotifications()
+                ->orderByDesc('created_at')
+                ->take(10)
+                ->get()
+                ->map(fn ($notification) => [
+                    'id' => $notification->id,
+                    'data' => $notification->data,
+                    'created_at' => $notification->created_at,
+                ]);
+
+            $notifications = [
+                'unread_count' => $user->unreadNotifications()->count(),
+                'items' => $unread,
+            ];
+        }
+
+        if ($user !== null) {
+            $cart = Cart::query()
+                ->where('user_id', $user->id)
+                ->withCount('items')
+                ->first();
+
+            $cartItemCount = $cart?->items_count ?? 0;
+        }
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => $user,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+                'info' => $request->session()->get('info'),
+            ],
+            'cart' => [
+                'item_count' => $cartItemCount,
+            ],
+            'notifications' => $notifications,
         ];
     }
 }

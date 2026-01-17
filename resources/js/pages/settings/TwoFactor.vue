@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 import { ShieldBan, ShieldCheck } from 'lucide-vue-next';
 import { onUnmounted, ref } from 'vue';
 
@@ -33,6 +33,24 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const { hasSetupData, clearTwoFactorAuthData } = useTwoFactorAuth();
 const showSetupModal = ref<boolean>(false);
+
+const enableForm = useForm({});
+const disableForm = useForm({});
+
+const submitEnable = () => {
+    enableForm.post(enable.url(), {
+        preserveScroll: true,
+        onSuccess: () => {
+            showSetupModal.value = true;
+        },
+    });
+};
+
+const submitDisable = () => {
+    disableForm.delete(disable.url(), {
+        preserveScroll: true,
+    });
+};
 
 onUnmounted(() => {
     clearTwoFactorAuthData();
@@ -72,16 +90,14 @@ onUnmounted(() => {
                         >
                             <ShieldCheck />Continue Setup
                         </Button>
-                        <Form
+                        <form
                             v-else
-                            v-bind="enable.form()"
-                            @success="showSetupModal = true"
-                            #default="{ processing }"
+                            @submit.prevent="submitEnable"
                         >
-                            <Button type="submit" :disabled="processing">
+                            <Button type="submit" :disabled="enableForm.processing">
                                 <ShieldCheck />Enable 2FA</Button
-                            ></Form
-                        >
+                            >
+                        </form>
                     </div>
                 </div>
 
@@ -101,16 +117,16 @@ onUnmounted(() => {
                     <TwoFactorRecoveryCodes />
 
                     <div class="relative inline">
-                        <Form v-bind="disable.form()" #default="{ processing }">
+                        <form @submit.prevent="submitDisable">
                             <Button
                                 variant="destructive"
                                 type="submit"
-                                :disabled="processing"
+                                :disabled="disableForm.processing"
                             >
                                 <ShieldBan />
                                 Disable 2FA
                             </Button>
-                        </Form>
+                        </form>
                     </div>
                 </div>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head } from '@inertiajs/vue3';
+import { Head, useForm } from '@inertiajs/vue3';
 
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,14 @@ import { send } from '@/routes/verification';
 defineProps<{
     status?: string;
 }>();
+
+const form = useForm({});
+
+const submit = () => {
+    form.post(send.url(), {
+        preserveScroll: true,
+    });
+};
 </script>
 
 <template>
@@ -28,13 +36,9 @@ defineProps<{
             provided during registration.
         </div>
 
-        <Form
-            v-bind="send.form()"
-            class="space-y-6 text-center"
-            v-slot="{ processing }"
-        >
-            <Button :disabled="processing" variant="secondary">
-                <Spinner v-if="processing" />
+        <form @submit.prevent="submit" class="space-y-6 text-center">
+            <Button :disabled="form.processing" variant="secondary">
+                <Spinner v-if="form.processing" />
                 Resend verification email
             </Button>
 
@@ -45,6 +49,6 @@ defineProps<{
             >
                 Log out
             </TextLink>
-        </Form>
+        </form>
     </AuthLayout>
 </template>

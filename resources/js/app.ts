@@ -1,9 +1,13 @@
 import '../css/app.css';
+import 'vue-sonner/style.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { Toaster } from 'vue-sonner';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
+
+import FlashToaster from './components/FlashToaster.vue';
 
 import { initializeTheme } from './composables/useAppearance';
 
@@ -17,7 +21,18 @@ createInertiaApp({
             import.meta.glob<DefineComponent>('./pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        createApp({
+            render: () =>
+                h('div', [
+                    h(App, props),
+                    h(Toaster, {
+                        position: 'bottom-right',
+                        closeButton: true,
+                        richColors: true,
+                    }),
+                    h(FlashToaster),
+                ]),
+        })
             .use(plugin)
             .mount(el);
     },
