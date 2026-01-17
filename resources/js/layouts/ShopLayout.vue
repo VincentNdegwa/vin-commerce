@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { Link, router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
 import { Bell, Receipt, ShoppingBag, ShoppingCart } from 'lucide-vue-next';
+import { computed } from 'vue';
 
+import Breadcrumbs from '@/components/Breadcrumbs.vue';
+import { Button } from '@/components/ui/button';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,19 +13,17 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import cart from '@/routes/cart';
 import orders from '@/routes/orders';
 import shop from '@/routes/shop';
 import type { BreadcrumbItemType } from '@/types';
-import Breadcrumbs from '@/components/Breadcrumbs.vue';
 
 interface Props {
 	breadcrumbs?: BreadcrumbItemType[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const { breadcrumbs } = withDefaults(defineProps<Props>(), {
 	breadcrumbs: () => [],
 });
 

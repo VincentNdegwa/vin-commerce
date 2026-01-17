@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -10,11 +11,9 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import ShopLayout from '@/layouts/ShopLayout.vue';
-import { type BreadcrumbItem } from '@/types';
-
-import orders from '@/routes/orders';
-import { computed } from 'vue';
+import ordersRoute from '@/routes/orders';
 import shop from '@/routes/shop';
+import { type BreadcrumbItem } from '@/types';
 
 interface OrderSummary {
     id: number;
@@ -39,7 +38,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const canCancel = (order: OrderSummary): boolean => order.status === 'pending';
 
 const cancelOrder = (orderId: number): void => {
-    router.post(orders.cancel.url({ order: orderId }), undefined, {
+    router.post(ordersRoute.cancel.url({ order: orderId }), undefined, {
         preserveScroll: true,
         only: ['orders'],
     });
@@ -104,7 +103,7 @@ const orderStatusClass = computed(() => {
                         </CardDescription>
                     </CardHeader>
                     <CardContent class="flex items-center justify-between gap-3">
-                        <Link :href="orders.show.url({ order: order.id })">
+                        <Link :href="ordersRoute.show.url({ order: order.id })">
                             <Button variant="outline" size="sm">View</Button>
                         </Link>
                         <Button

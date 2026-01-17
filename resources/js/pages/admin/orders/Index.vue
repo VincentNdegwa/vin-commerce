@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -10,10 +11,9 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
+import ordersRoute from '@/routes/admin/orders';
 import { type BreadcrumbItem } from '@/types';
 
-import orders from '@/routes/admin/orders';
-import { computed } from 'vue';
 
 interface OrderSummary {
     id: number;
@@ -37,7 +37,7 @@ const isPending = (order: OrderSummary) => order.status === 'pending';
 const completeOrder = (order: OrderSummary) => {
     if (!isPending(order)) return;
 
-    router.post(orders.complete.url({ order: order.id }), undefined, {
+    router.post(ordersRoute.complete.url({ order: order.id }), undefined, {
         preserveScroll: true,
     });
 };
@@ -45,7 +45,7 @@ const completeOrder = (order: OrderSummary) => {
 const cancelOrder = (order: OrderSummary) => {
     if (!isPending(order)) return;
 
-    router.post(orders.cancel.url({ order: order.id }), undefined, {
+    router.post(ordersRoute.cancel.url({ order: order.id }), undefined, {
         preserveScroll: true,
     });
 };
@@ -124,7 +124,7 @@ const orderStatusClass = computed(() => {
                             Cancel
                         </Button>
                     </div>
-                    <Link :href="orders.show.url({ order: order.id })">
+                    <Link :href="ordersRoute.show.url({ order: order.id })">
                         <Button variant="outline" size="sm">View</Button>
                     </Link>
                 </CardContent>

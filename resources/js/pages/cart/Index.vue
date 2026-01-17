@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { Head, router, useForm } from '@inertiajs/vue3';
-import { ref, watchEffect } from 'vue';
 import { CreditCard, RefreshCw, ShoppingCart, Trash2 } from 'lucide-vue-next';
+import { ref, watchEffect } from 'vue';
 
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import ShopLayout from '@/layouts/ShopLayout.vue';
-import { type BreadcrumbItem } from '@/types';
-
 import {
 	Dialog,
 	DialogClose,
@@ -19,9 +15,12 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import cart from '@/routes/cart';
+import { Input } from '@/components/ui/input';
+import ShopLayout from '@/layouts/ShopLayout.vue';
+import cartRoute from '@/routes/cart';
 import checkout from '@/routes/checkout';
 import shop from '@/routes/shop';
+import { type BreadcrumbItem } from '@/types';
 
 interface CartItemProduct {
 	id: number;
@@ -72,14 +71,14 @@ const updateItem = (itemId: number): void => {
 	const quantity = quantities.value[itemId] ?? 0;
 	updateForm.quantity = quantity;
 
-	updateForm.put(cart.items.update.url({ item: itemId }), {
+	updateForm.put(cartRoute.items.update.url({ item: itemId }), {
 		preserveScroll: true,
 		only: ['cart', 'flash'],
 	});
 };
 
 const removeItem = (itemId: number): void => {
-	router.delete(cart.items.destroy.url({ item: itemId }), {
+	router.delete(cartRoute.items.destroy.url({ item: itemId }), {
 		preserveScroll: true,
 		only: ['cart', 'flash'],
 	});

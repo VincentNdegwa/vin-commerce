@@ -14,9 +14,9 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import ShopLayout from '@/layouts/ShopLayout.vue';
+import cart from '@/routes/cart';
 import { type BreadcrumbItem } from '@/types';
 
-import cart from '@/routes/cart';
 
 interface Product {
     id: number;

@@ -13,7 +13,7 @@ import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
-const props = defineProps<{
+const { status, canResetPassword, canRegister } = defineProps<{
     status?: string;
     canResetPassword: boolean;
     canRegister: boolean;

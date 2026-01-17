@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
+import products from '@/routes/admin/products';
 import { type BreadcrumbItem } from '@/types';
 
-import products from '@/routes/admin/products';
 
 const props = defineProps<{ statuses: string[] }>();
 

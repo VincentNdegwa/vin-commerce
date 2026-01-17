@@ -15,11 +15,7 @@ use RuntimeException;
 
 class OrderService
 {
-    /**
-     * List all orders for admin consumption.
-     *
-     * @return array<int, array<string, mixed>>
-     */
+
     public function listForAdmin(User $user): array
     {
         $orders = Order::query()
@@ -38,11 +34,7 @@ class OrderService
             ->all();
     }
 
-    /**
-     * Detailed order payload for admin view.
-     *
-     * @return array<string, mixed>
-     */
+
     public function detailForAdmin(User $user, Order $order): array
     {
         $order->load(['user', 'items.product']);
@@ -68,11 +60,7 @@ class OrderService
         ];
     }
 
-    /**
-     * List orders for a specific customer.
-     *
-     * @return array<int, array<string, mixed>>
-     */
+
     public function listForCustomer(User $user): array
     {
         $orders = Order::query()
@@ -90,11 +78,7 @@ class OrderService
             ->all();
     }
 
-    /**
-     * Detailed order payload for a specific customer.
-     *
-     * @return array<string, mixed>
-     */
+
     public function detailForCustomer(User $user, Order $order): array
     {
         if ($order->user_id !== $user->id) {
@@ -119,9 +103,6 @@ class OrderService
         ];
     }
 
-    /**
-     * Mark an order as completed by the given actor.
-     */
     public function completeOrder(User $actor, Order $order): void
     {
         if ($order->status !== OrderStatus::Pending) {
@@ -132,9 +113,7 @@ class OrderService
         $order->save();
     }
 
-    /**
-     * Cancel an order as an admin, restoring stock.
-     */
+
     public function cancelOrderAsAdmin(User $actor, Order $order): void
     {
         if ($order->status !== OrderStatus::Pending) {
@@ -155,9 +134,7 @@ class OrderService
         }
     }
 
-    /**
-     * Cancel an order as the owning customer, restoring stock.
-     */
+
     public function cancelOrderAsCustomer(User $actor, Order $order): void
     {
         if ($order->user_id !== $actor->id) {

@@ -9,9 +9,6 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem } from '@/types';
-
 import {
     Dialog,
     DialogClose,
@@ -22,7 +19,10 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import products from '@/routes/admin/products';
+import AppLayout from '@/layouts/AppLayout.vue';
+import productsRoute from '@/routes/admin/products';
+import { type BreadcrumbItem } from '@/types';
+
 
 interface Product {
     id: number;
@@ -36,7 +36,7 @@ interface Product {
 const props = defineProps<{ products: Product[] }>();
 
 const destroyProduct = (productId: number) => {
-    router.delete(products.destroy.url({ product: productId }), {
+    router.delete(productsRoute.destroy.url({ product: productId }), {
         preserveScroll: true,
         only: ['products'],
     });
@@ -56,7 +56,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex items-center justify-between mb-6">
             <h1 class="text-2xl font-semibold tracking-tight">Products</h1>
-            <Link :href="products.create.url()">
+            <Link :href="productsRoute.create.url()">
                 <Button size="sm">New product</Button>
             </Link>
         </div>
@@ -75,7 +75,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </CardHeader>
                 <CardContent class="flex items-center justify-between gap-3">
                     <div class="flex gap-2">
-                        <Link :href="products.edit.url({ product: product.id })">
+                        <Link :href="productsRoute.edit.url({ product: product.id })">
                             <Button variant="outline" size="sm">Edit</Button>
                         </Link>
                     </div>

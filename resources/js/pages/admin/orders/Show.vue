@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, router } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -10,10 +11,9 @@ import {
     CardTitle,
 } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout.vue';
+import orders from '@/routes/admin/orders';
 import { type BreadcrumbItem } from '@/types';
 
-import orders from '@/routes/admin/orders';
-import { computed } from 'vue';
 
 interface OrderItem {
     id: number;

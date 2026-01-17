@@ -3,12 +3,11 @@ import 'vue-sonner/style.css';
 
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { Toaster } from 'vue-sonner';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
+import { Toaster } from 'vue-sonner';
 
 import FlashToaster from './components/FlashToaster.vue';
-
 import { initializeTheme } from './composables/useAppearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';

@@ -15,11 +15,11 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import orders from '@/routes/admin/orders';
+import products from '@/routes/admin/products';
 import { type NavItem } from '@/types';
 
 import AppLogo from './AppLogo.vue';
-import products from '@/routes/admin/products';
-import orders from '@/routes/admin/orders';
 
 const mainNavItems: NavItem[] = [
     {
