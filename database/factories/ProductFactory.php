@@ -46,7 +46,7 @@ class ProductFactory extends Factory
 
         return [
             'name' => fake()->randomElement($names),
-            'description' => fake()->sentence(12),
+            'description' => "Product Description",
             'price' => fake()->randomFloat(2, 5, 500),
             'stock_quantity' => fake()->numberBetween(0, 200),
             'status' => ProductStatus::Active,
